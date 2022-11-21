@@ -2179,6 +2179,42 @@ struct SimpleOpTypeSetTeller : public Teller {
     }
 #endif
 
+    if (op_type == "less_than") {
+#if !IS_TRT_VERSION_GE(8000)
+      VLOG(3) << "less_than is not supported when TensorRT < 8.0";
+      return false;
+#else
+      int axis = PADDLE_GET_CONST(int, desc.GetAttr("axis"));
+      if (axis == 0) {
+        return false;
+      }
+      auto* block = desc.Block();
+      if (block == nullptr) {
+        VLOG(3) << "The block desc is nullptr, we can't continue to analyze. "
+                   "Developers need to check whether block_desc is passed in "
+                   "the pass.";
+        return false;
+      }
+#endif
+    }
+    if (op_type == "greater_than") {
+#if !IS_TRT_VERSION_GE(8000)
+      VLOG(3) << "greater_than is not supported when TensorRT < 8.0";
+      return false;
+#else
+      int axis = PADDLE_GET_CONST(int, desc.GetAttr("axis"));
+      if (axis == 0) {
+        return false;
+      }
+      auto* block = desc.Block();
+      if (block == nullptr) {
+        VLOG(3) << "The block desc is nullptr, we can't continue to analyze. "
+                   "Developers need to check whether block_desc is passed in "
+                   "the pass.";
+        return false;
+      }
+#endif
+    }
     if (op_type == "equal") {
 #if !IS_TRT_VERSION_GE(8000)
       VLOG(3) << "compare is not supported when TensorRT < 8.0";
@@ -2299,9 +2335,9 @@ struct SimpleOpTypeSetTeller : public Teller {
       "atanh",
       "ceil",
       "floor",
-      "erf",
       "reciprocal",
       "rsqrt",
+      "erf",
       "softmax",
       "sigmoid",
       "hard_swish",
@@ -2321,6 +2357,8 @@ struct SimpleOpTypeSetTeller : public Teller {
       "logical_or",
       "logical_xor",
       "logical_and",
+      "less_than",
+      "greater_than",
       "equal",
       "dropout",
       "fill_any_like",
@@ -2431,9 +2469,9 @@ struct SimpleOpTypeSetTeller : public Teller {
       "atanh",
       "ceil",
       "floor",
-      "erf",
       "reciprocal",
       "rsqrt",
+      "erf",
       "softmax",
       "sigmoid",
       "hard_swish",
@@ -2453,6 +2491,8 @@ struct SimpleOpTypeSetTeller : public Teller {
       "logical_or",
       "logical_xor",
       "logical_and",
+      "less_than",
+      "greater_than",
       "equal",
       "dropout",
       "fill_any_like",

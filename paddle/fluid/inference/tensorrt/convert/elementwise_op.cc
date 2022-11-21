@@ -168,6 +168,8 @@ const std::unordered_map<std::string, nvinfer1::ElementWiseOperation>
         {"pow", nvinfer1::ElementWiseOperation::kPOW},
         {"max", nvinfer1::ElementWiseOperation::kMAX},
         {"floordiv", nvinfer1::ElementWiseOperation::kFLOOR_DIV},
+        {"less_than", nvinfer1::ElementWiseOperation::kLESS},
+        {"greater_than", nvinfer1::ElementWiseOperation::kGREATER},
         {"logical_or", nvinfer1::ElementWiseOperation::kOR},
         {"logical_xor", nvinfer1::ElementWiseOperation::kXOR},
         {"logical_and", nvinfer1::ElementWiseOperation::kAND},
@@ -212,6 +214,17 @@ class ElementwiseTensorFloorDivOpConverter
     : public ElementwiseTensorOpConverter {
  public:
   ElementwiseTensorFloorDivOpConverter() { op_type_ = "floordiv"; }
+};
+
+class ElementwiseTensorLessThanOpConverter
+    : public ElementwiseTensorOpConverter {
+ public:
+  ElementwiseTensorLessThanOpConverter() { op_type_ = "less_than"; }
+};
+class ElementwiseTensorGreaterThanOpConverter
+    : public ElementwiseTensorOpConverter {
+ public:
+  ElementwiseTensorGreaterThanOpConverter() { op_type_ = "greater_than"; }
 };
 class ElementwiseTensorLogicalOrOpConverter
     : public ElementwiseTensorOpConverter {
@@ -265,6 +278,9 @@ REGISTER_TRT_OP_CONVERTER(elementwise_pow_tensor,
                           ElementwiseTensorPowOpConverter);
 REGISTER_TRT_OP_CONVERTER(elementwise_floordiv_tensor,
                           ElementwiseTensorFloorDivOpConverter);
+REGISTER_TRT_OP_CONVERTER(less_than, ElementwiseTensorLessThanOpConverter);
+REGISTER_TRT_OP_CONVERTER(greater_than,
+                          ElementwiseTensorGreaterThanOpConverter);
 REGISTER_TRT_OP_CONVERTER(logical_or, ElementwiseTensorLogicalOrOpConverter);
 REGISTER_TRT_OP_CONVERTER(logical_xor, ElementwiseTensorLogicalXorOpConverter);
 REGISTER_TRT_OP_CONVERTER(logical_and, ElementwiseTensorLogicalAndOpConverter);
