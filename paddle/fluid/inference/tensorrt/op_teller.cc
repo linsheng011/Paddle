@@ -2106,7 +2106,6 @@ struct SimpleOpTypeSetTeller : public Teller {
         }
       }
     }
-
     if (op_type == "cast") {
 // trt 6015 result in Windows ppyolo_mbv3 TRT fp32 diff
 #if !IS_TRT_VERSION_GE(7000)
@@ -2124,14 +2123,20 @@ struct SimpleOpTypeSetTeller : public Teller {
         VLOG(3) << "unsupport data type conversion";
         return false;
       }
-      if (in_dtype == 0) {
-        VLOG(3) << "do not support input data type as bool now";
-        return false;
+#if IS_TRT_VERSION_GE(8400)
+      if (in_dtype == 0 || out_dtype == 0) {
+        if (with_dynamic_shape) {
+          VLOG(3) << "the cast op supports inputs and outputs of BOOL by "
+                     "trt8.4 above ";
+          return true;
+        }
       }
+#endif
       if (!((in_dtype == 5 || in_dtype == 4 || in_dtype == 2) &&
             (out_dtype == 5 || out_dtype == 4 || out_dtype == 2))) {
-        VLOG(3) << "only valid conversions are: "
-                   "(kFLOAT | kHALF | kINT32) -> (kFLOAT | kHALF | kINT32)";
+        VLOG(3)
+            << "only valid conversions are: "
+               "(kFLOAT | kHALF | kINT32 | BOOL) -> (kFLOAT | kHALF | kINT32)";
         return false;
       }
     }
@@ -2313,6 +2318,9 @@ struct SimpleOpTypeSetTeller : public Teller {
       "elementwise_min",
       "elementwise_max",
       "elementwise_floordiv",
+      "logical_or",
+      "logical_xor",
+      "logical_and",
       "equal",
       "dropout",
       "fill_any_like",
@@ -2442,6 +2450,9 @@ struct SimpleOpTypeSetTeller : public Teller {
       "elementwise_min",
       "elementwise_max",
       "elementwise_floordiv",
+      "logical_or",
+      "logical_xor",
+      "logical_and",
       "equal",
       "dropout",
       "fill_any_like",
