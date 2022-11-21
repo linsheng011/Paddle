@@ -87,7 +87,7 @@ struct SimpleOpTypeSetTeller : public Teller {
         "tan",       "tanh",  "sinh",
         "cosh",      "asin",  "acos",
         "atan",      "asinh", "atanh",
-        "ceil",      "floor", "erf",
+        "ceil",      "floor", "erf", "reciprocal",
         "silu",      "celu",  "tanh_shrink",
         "logsigmoid"};
     if (act_op_list.find(op_type) != act_op_list.end()) {
@@ -2295,6 +2295,7 @@ struct SimpleOpTypeSetTeller : public Teller {
       "ceil",
       "floor",
       "erf",
+      "reciprocal",
       "softmax",
       "sigmoid",
       "hard_swish",
@@ -2422,6 +2423,7 @@ struct SimpleOpTypeSetTeller : public Teller {
       "ceil",
       "floor",
       "erf",
+      "reciprocal",
       "softmax",
       "sigmoid",
       "hard_swish",
